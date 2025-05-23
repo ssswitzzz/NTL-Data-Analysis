@@ -7,36 +7,20 @@ from rasterstats import zonal_stats  # 用于区域统计
 import numpy as np
 import pandas as pd
 
-# --- 用户配置 ---
-# 1. 输入的省级边界Shapefile文件路径
+
 PROVINCIAL_SHP_PATH = ".\\boundaries\\省级.shp"
-# 例如: r"D:\data\gis\china_boundary\province.shp"
 
-# 2. (可选) 省级Shapefile中用于唯一标识每个省份的字段名。
-# PROVINCIAL_ID_FIELD = "ENG_NAME" # 或 "NAME", "省代码" 等
-
-# 3. 存放年度灯光TIF文件的文件夹路径
 TIF_FILE_DIRECTORY = ".\\regions_excluded_tiffs"
-# 例如: r"D:\data\gis\nightlights_clipped_no_hkmotw"
 
-# 4. 输出年度Shapefile的目录路径
-#    脚本将在此目录下为每一年生成一个Shapefile。
 OUTPUT_YEARLY_SHP_DIRECTORY = ".\\yearly_nightlight_stats"
-# 例如: r"D:\data\gis\yearly_provincial_ntl_summary"
 
-# 5. 要计算的统计量类型
-STATISTIC_TO_CALCULATE = "sum"  # 计算总灯光强度
-
-# 6. 当TIF文件本身没有指定NoData值时，用于区域统计的备用NoData值。
-NODATA_FALLBACK = 0  # 如果TIF未指定NoData，则视0为NoData (请根据您的数据调整)
+STATISTIC_TO_CALCULATE = "mean"
+NODATA_FALLBACK = 0
 
 
-# --- 配置结束 ---
+
 
 def extract_year_from_filename(filename):
-    """
-    从文件名中提取四位数的年份。
-    """
     matches = re.findall(r'(\d{4})', filename)
     if matches:
         return matches[-1]
