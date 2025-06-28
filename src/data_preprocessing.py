@@ -5,8 +5,8 @@ import os
 import glob
 import numpy as np
 
-#由于数据的TIFF文件有些有港澳台数据，有些没有，所以为了便于处理，在这个程序中我将所有TIFF文件的港澳台区域切割出来。
-#要做到这一点，我的思路是用省级的shp文件，使用港澳台区域的属性字段把这三个区域筛选出来，进行掩膜切割
+# 由于数据的TIFF文件有些有港澳台数据，有些没有，所以为了便于处理，在这个程序中我将所有TIFF文件的港澳台区域切割出来。
+# 要做到这一点，我的思路是用省级的shp文件，使用港澳台区域的属性字段把这三个区域筛选出来，进行掩膜切割
 
 shp_path = ".\\boundaries\\省级.shp"
 tif_folder_path = "."
@@ -27,11 +27,8 @@ for tif_path in tif_files:
     with rasterio.open(tif_path) as src:
         mask_gdf = gdf_filtered.copy()  # 使用副本以防万一
 
-        # 确保矢量数据的坐标参考系 (CRS) 与栅格数据一致
         if mask_gdf.crs != src.crs:
             mask_gdf = mask_gdf.to_crs(src.crs)
-            print(f"    Shapefile已重投影到: {mask_gdf.crs}")
-            print(f"    重投影后Shapefile的范围 (bounds): {mask_gdf.total_bounds}")
         shapes = [geom for geom in mask_gdf.geometry]
 
 
@@ -56,5 +53,5 @@ for tif_path in tif_files:
         base_name = os.path.basename(tif_path)
         output_tif_path = os.path.join(output_folder_path, f"clipped_{base_name}")
 
-        with rasterio.open(output_tif_path, "w", **out_meta) as dest:
-            dest.write(out_image)
+        with rasterio.open(output_tif_path, "w", **out_meta) as file:
+            file.write(out_image)
